@@ -50,6 +50,35 @@ app.use((req, res, next) => {
     next();
 });
 
+// Response Envelope
+function responseEnvelope(res, data, message, status = 200) {
+    return res.status(status).json({
+        success: true, message, data, error: null,
+    })
+}
+
+function errorResponseEnvelope(res, status, message, details = null) {
+    return res.status(status).json({
+        success: false, message, data: null, error: details,
+    })
+}
+
+function successResponse(res, message, data = null, status = 200) {
+    return responseEnvelope(res, data, message, status)
+}
+
+function errorResponse(res, message, statusOrDetails = 400, details = null) {
+    let status = 400
+    let errorDetails = details
+    if (typeof statusOrDetails === 'number') {
+        status = statusOrDetails
+    } else if (statusOrDetails !== null && typeof statusOrDetails !== 'undefined') {
+        errorDetails = statusOrDetails
+        status = 400
+    }
+    return errorResponseEnvelope(res, status, message, errorDetails)
+}
+
 app.listen(port, () => {
     console.log(`App running on port ${port}`);
 });
