@@ -31,6 +31,9 @@ const initDb = async () => {
 };
 initDb();
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.listen(port, () => {
     console.log(`App running on port ${port}`);
 });
