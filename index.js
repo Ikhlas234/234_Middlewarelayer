@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import PG from "pg";
+import joi from "joi";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -78,6 +79,18 @@ function errorResponse(res, message, statusOrDetails = 400, details = null) {
     }
     return errorResponseEnvelope(res, status, message, errorDetails)
 }
+
+// Joi validation schema
+const biodataSchema = joi.object({
+    id: joi.number().integer().required(),
+    nama: joi.string().trim().min(2).max(100).required(),
+    nim: joi.string().trim().min(10).max(20).required(),
+    kelas: joi.string().trim().min(1).max(20).required(),
+});
+
+const idSchema = joi.object({
+    id: joi.number().integer().positive().required(),
+});
 
 app.listen(port, () => {
     console.log(`App running on port ${port}`);
