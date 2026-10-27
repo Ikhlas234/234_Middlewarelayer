@@ -14,6 +14,23 @@ const poll = new Pool({
     port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 5432
 });
 
+// Auto-create table biodata jika belum ada
+const initDb = async () => {
+    try {
+        await poll.query(`
+            CREATE TABLE IF NOT EXISTS biodata (
+                id SERIAL PRIMARY KEY,
+                nama VARCHAR(100) NOT NULL,
+                nim VARCHAR(20) NOT NULL,
+                kelas VARCHAR(20) NOT NULL
+            );
+        `);
+    } catch (err) {
+        console.error("Gagal inisialisasi tabel biodata:", err.message);
+    }
+};
+initDb();
+
 app.listen(port, () => {
     console.log(`App running on port ${port}`);
 });
